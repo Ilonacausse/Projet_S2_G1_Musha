@@ -11,6 +11,7 @@ public class Script_weakPoint : MonoBehaviour
     {
         if(collision.CompareTag("Player"))
         {
+            Debug.Log("entre");
             Destroy(objectToDestroy);
         }
     }

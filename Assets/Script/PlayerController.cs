@@ -11,13 +11,6 @@ public class PlayerController : MonoBehaviour
     //--------Movement standard and dash values ------------
     [SerializeField] float CurrentSpeed;
     [SerializeField] float NormalSpeed = 5f;
-    [SerializeField] float dashingSpeed = 100f;
-
-    //--------Movement and dash values ------------
-
-    private bool canDash = true;
-    [SerializeField] float dashingTime = 0.1f;
-    [SerializeField] float dashCooldown = 2f;
 
     //--------Player Animator and sprite renderer ------------
     [SerializeField] Animator Player_Animator;
@@ -87,11 +80,6 @@ public class PlayerController : MonoBehaviour
             //PlayerRigidBody.MovePosition(PlayerRigidBody.position + (Vector2.right * CurrentSpeed * Time.deltaTime));
            // Player_Animator.SetBool("BoolRun", true);
            // spriteRenderer.flipX = false;
-
-           //if (isGrounded)
-           // {
-           //     //psRun.Play();
-           // }
         }
         else
         {
@@ -118,11 +106,6 @@ public class PlayerController : MonoBehaviour
             //
         }
 
-        if (Input.GetKeyDown(KeyCode.F) && canDash)
-        {
-            Dash();
-        }
-
     }
 
     public void PlayerCanMove()
@@ -130,20 +113,6 @@ public class PlayerController : MonoBehaviour
        CanMove = true;
     }
 
-void Dash()
-    {
-        canDash = false;
-        CurrentSpeed = dashingSpeed;
-        StartCoroutine(PlayerDash());
-    }
-
-    private IEnumerator PlayerDash()
-    {
-        yield return new WaitForSeconds(dashingTime);
-        CurrentSpeed = NormalSpeed;
-        yield return new WaitForSeconds(dashCooldown);
-        canDash = true;
-    }
 
     void Jump()
     {
@@ -157,24 +126,5 @@ void Dash()
 
     }
 
-
-   /* private void OnDrawGizmos()
-    {
-        // rendu et position du cercle sous le joueur 
-        Gizmos.color = Color.blue;
-        Gizmos.DrawWireSphere(groundCheckLeft.position);
-    }*/
-
- 
-    //Coin wip
-   
-    private void OnTriggerEnter2D(Collider2D collision)
-    {
-        if (collision.CompareTag("Player"))
-        {
-            //CM.coinCount++;
-            Destroy(gameObject);
-        }
-    }
 }
 
