@@ -66,7 +66,7 @@ public class PlayerController : MonoBehaviour
             transform.Translate(Vector2.left * CurrentSpeed * Time.deltaTime);
             //PlayerRigidBody.MovePosition(PlayerRigidBody.position + (Vector2.left * CurrentSpeed * Time.deltaTime));
             //Player_Animator.SetBool("BoolRun", true);
-            //spriteRenderer.flipX = true;
+            GetComponent<SpriteRenderer>().flipX = true;
 
             //if (isGrounded)
             //{
@@ -78,8 +78,8 @@ public class PlayerController : MonoBehaviour
         {
             transform.Translate(Vector2.right * CurrentSpeed * Time.deltaTime);
             //PlayerRigidBody.MovePosition(PlayerRigidBody.position + (Vector2.right * CurrentSpeed * Time.deltaTime));
-           // Player_Animator.SetBool("BoolRun", true);
-           // spriteRenderer.flipX = false;
+            // Player_Animator.SetBool("BoolRun", true);
+            GetComponent<SpriteRenderer>().flipX = false;
         }
         else
         {
@@ -98,7 +98,7 @@ public class PlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Keypad2))
         {
-            Player_Animator.SetTrigger("TrSeek");
+            //Player_Animator.SetTrigger("TrSeek");
         }
 
         else if (Input.GetKeyUp(KeyCode.Keypad2))
