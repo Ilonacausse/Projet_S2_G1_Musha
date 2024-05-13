@@ -590,8 +590,8 @@ PlayerSettings:
   apiCompatibilityLevelPerPlatform: {}
   m_RenderingPath: 1
   m_MobileRenderingPath: 1
-  metroPackageName: Projet_S2_G1_Musha
-  metroPackageVersion: 
+  metroPackageName: ProjetS2G1Musha
+  metroPackageVersion: 1.0.0.0
   metroCertificatePath: 
   metroCertificatePassword: 
   metroCertificateSubject: 
@@ -599,7 +599,7 @@ PlayerSettings:
   metroCertificateNotAfter: 0000000000000000
   metroApplicationDescription: Projet_S2_G1_Musha
   wsaImages: {}
-  metroTileShortName: 
+  metroTileShortName: Projet_S2_G1_Musha
   metroTileShowName: 0
   metroMediumTileShowName: 0
   metroLargeTileShowName: 0
@@ -663,7 +663,7 @@ PlayerSettings:
   hmiLogStartupTiming: 0
   hmiCpuConfiguration: 
   apiCompatibilityLevel: 6
-  activeInputHandler: 0
+  activeInputHandler: 2
   windowsGamepadBackendHint: 0
   cloudProjectId: c4d57937-cf6d-4908-bee0-47ab963a4a3d
   framebufferDepthMemorylessMode: 0

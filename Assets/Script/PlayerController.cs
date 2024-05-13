@@ -2,15 +2,22 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.InputSystem;
+
 
 public class PlayerController : MonoBehaviour
 {
     //--------Player can moove or not ------------
     public bool CanMove = true;
 
-    //--------Movement standard and dash values ------------
+    //--------Movement standard ------------
+    private Input_Manager _defaultMovePlayer;
+
     [SerializeField] float CurrentSpeed;
     [SerializeField] float NormalSpeed = 5f;
+
+    private Transform Gun_Transform;
+    public bool Curing = false;
 
     //--------Player Animator and sprite renderer ------------
     [SerializeField] Animator Player_Animator;
@@ -26,10 +33,28 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask CollisionsLayers;
 
-    //--------Particule Systeme ------------
-    [Header("Particule")]
-    [SerializeField] ParticleSystem psJump;
-    [SerializeField] ParticleSystem psRun;
+
+
+    private void Awake()
+    {
+        _defaultMovePlayer = new Input_Manager();
+    }
+
+    private void OnEnable ()
+    {
+        _defaultMovePlayer.Player.Move.Enable();
+        _defaultMovePlayer.Player.Jump.Enable();
+        _defaultMovePlayer.Player.Power.Enable();
+        _defaultMovePlayer.Player.Interact.Enable();
+    }
+
+    private void OnDisable()
+    {
+        _defaultMovePlayer.Player.Move.Disable();
+        _defaultMovePlayer.Player.Jump.Disable();
+        _defaultMovePlayer.Player.Power.Disable();
+        _defaultMovePlayer.Player.Interact.Disable();
+    }
 
     void Start()
     {
@@ -42,12 +67,13 @@ public class PlayerController : MonoBehaviour
     {
         PlayerMouvement();
         Jump();
+        Curing_Power();
 
     }
 
     private void FixedUpdate()
     {
-
+        
         // ************** Ground Detection ************** \\
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, CollisionsLayers);
@@ -59,6 +85,9 @@ public class PlayerController : MonoBehaviour
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
+
+    // ************** Movement ************** \\
+
     void PlayerMouvement()
     {
         if (Input.GetKey(KeyCode.LeftArrow) && CanMove)
@@ -67,11 +96,8 @@ public class PlayerController : MonoBehaviour
             //PlayerRigidBody.MovePosition(PlayerRigidBody.position + (Vector2.left * CurrentSpeed * Time.deltaTime));
             //Player_Animator.SetBool("BoolRun", true);
             GetComponent<SpriteRenderer>().flipX = true;
+            this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 180f, 0f);                                         //Flip the Gun when the player changes his axe
 
-            //if (isGrounded)
-            //{
-            //    psRun.Play();
-            //}
         }
 
         else if (Input.GetKey(KeyCode.RightArrow) && CanMove)
@@ -80,30 +106,8 @@ public class PlayerController : MonoBehaviour
             //PlayerRigidBody.MovePosition(PlayerRigidBody.position + (Vector2.right * CurrentSpeed * Time.deltaTime));
             // Player_Animator.SetBool("BoolRun", true);
             GetComponent<SpriteRenderer>().flipX = false;
-        }
-        else
-        {
-            //Player_Animator.SetBool("BoolRun", false);
-        }
+            this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 0f, 0f);                                         //Flip the Gun when the Player changes his axe
 
-        if (Input.GetKeyDown(KeyCode.Keypad1))
-        {
-            //Player_Animator.SetTrigger("TrCrouch");
-        }
-
-        else if (Input.GetKeyUp(KeyCode.Keypad1))
-        {
-            //
-        }
-
-        if (Input.GetKeyDown(KeyCode.Keypad2))
-        {
-            //Player_Animator.SetTrigger("TrSeek");
-        }
-
-        else if (Input.GetKeyUp(KeyCode.Keypad2))
-        {
-            //
         }
 
     }
@@ -124,6 +128,17 @@ public class PlayerController : MonoBehaviour
             //psJump.Play();
         }
 
+    }
+
+    void Curing_Power()
+    {
+
+
+        if (Input.GetKey(KeyCode.Keypad3))
+        {
+            Curing = true;
+
+        }
     }
 
 }
