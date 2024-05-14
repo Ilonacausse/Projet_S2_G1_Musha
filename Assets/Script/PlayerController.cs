@@ -6,9 +6,13 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
+
+
+
 public class PlayerController : MonoBehaviour
 {
 
+    //-------- New Input Controller ------------
     private Input_Control _inputControl;
 
     private InputAction _playerMove;
@@ -20,40 +24,45 @@ public class PlayerController : MonoBehaviour
     
 
 
-    //--------Player can move or not ------------
+    //-------- Player can move or not ------------
     public bool CanMove = true;
 
-    //--------Movement standard ------------
-    public Transform BulletSpawner;
+    //-------- Movement standard ------------
     [SerializeField] PlayerController playerController;
 
-    [SerializeField] float CurrentSpeed;
-    [SerializeField] float NormalSpeed = 5f;
+    [SerializeField] float Speed = 5f;
+
+    public Vector2 Input_Direction;
 
 
-    private Transform Gun_Transform;
-    public bool Curing = false;
-
-    //--------Player Animator and sprite renderer ------------
+    //-------- Player Animator and sprite renderer ------------
     [SerializeField] Animator Player_Animator;
     [SerializeField] SpriteRenderer spriteRenderer;
 
-    //--------Player Jump ------------
+
+    //-------- Player Jump ------------
     [SerializeField] Rigidbody2D PlayerRigidBody;
     [SerializeField] float PlayerJump= 250f;
+
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius; 
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask CollisionsLayers;
 
-    //---------- Slime ------------
+
+    //-------- Powers ------------
+    public Transform BulletSpawner;
+    private Transform Gun_Transform;
+
+    public bool Curing = false;
+
+    //---- Slime ----
     [SerializeField] GameObject bulletPrefab_slime;
     [SerializeField] float bulletSpeed_slime = 10;
     [SerializeField] float Ammo_slime = 6;
     [SerializeField] float Timer_slime = 10f;
 
-
-    //---------- Net ------------
+    //---- Net ----
     [SerializeField] GameObject bulletPrefab_net;
     [SerializeField] float bulletSpeed_net = 10;
     [SerializeField] float Ammo_net = 3;
@@ -61,7 +70,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    public Vector2 Input_Direction;
+
 
     private void Awake()
     {
@@ -73,6 +82,8 @@ public class PlayerController : MonoBehaviour
         _playerPower3 = _inputControl.Player.Power3;
         _playerJump = _inputControl.Player.Jump;
         _playerInteract = _inputControl.Player.Interact;
+
+        PlayerRigidBody = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
@@ -102,13 +113,6 @@ public class PlayerController : MonoBehaviour
 
 
 
-    void Start()
-    {
-        CurrentSpeed = NormalSpeed;
-    }
-
-
-
     private void FixedUpdate()
     {
         PlayerMouvement();
@@ -117,19 +121,16 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, CollisionsLayers);
 
-
-
-
     }
     private void OnDrawGizmos()
     {
-        // rendu et position du cercle sous le joueur 
+        // visuel de la position du cercle sous le joueur 
         Gizmos.color = Color.blue;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
 
-    // ************** Movement ************** \\
+    //______________________________________ MOVEMENT ______________________________________
 
     public void PlayerMouvement()
     {
@@ -138,23 +139,22 @@ public class PlayerController : MonoBehaviour
             Input_Direction = _playerMove.ReadValue<Vector2>();
             Vector2 Player_Velocity = PlayerRigidBody.velocity;
 
-            Player_Velocity.x = (CurrentSpeed * Input_Direction.x);
+            Player_Velocity.x = (Speed * Input_Direction.x);
             PlayerRigidBody.velocity = Player_Velocity;
+
 
             if (PlayerRigidBody.velocity.x > 0.01)
             {
 
-
                // GetComponent<SpriteRenderer>().flipX = true;
-                this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 0f, 0f);          //Flip the Gun when the player changes his axe
+                this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 0f, 0f);        //Flip the Gun when the player changes his axe
 
             }
             else if (PlayerRigidBody.velocity.x < -0.01)
             {
 
-
                // GetComponent<SpriteRenderer>().flipX = false;
-                this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 180f, 0f);          //Flip the Gun when the Player changes his axe
+                this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 180f, 0f);        //Flip the Gun when the Player changes his axe
 
             }
 
@@ -168,6 +168,9 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
+    //______________________________________ JUMP ______________________________________
+
     public void Jump(InputAction.CallbackContext context)
     {
         if (isGrounded)
@@ -178,7 +181,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    /*************** SLIME ***************/
+
+    //______________________________________ SLIME ______________________________________
 
     private void SlimePower(InputAction.CallbackContext context)
     {
@@ -210,7 +214,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    /*************** NET ***************/
+
+    //______________________________________ NET ______________________________________
 
     private void NetPower(InputAction.CallbackContext context) 
     { 
@@ -241,7 +246,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    /*************** CURING ***************/
+
+    //______________________________________ CURING ______________________________________
 
     void CuringPower(InputAction.CallbackContext context)
     {
