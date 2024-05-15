@@ -43,6 +43,7 @@ public class PlayerController : MonoBehaviour
     //-------- Player Jump ------------
     [SerializeField] Rigidbody2D PlayerRigidBody;
     [SerializeField] float PlayerJump= 250f;
+    [SerializeField] int NbJump = 1;
 
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius; 
@@ -67,6 +68,9 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float bulletSpeed_net = 10;
     [SerializeField] float Ammo_net = 3;
     [SerializeField] float Timer_net = 15f;
+
+    //---- Curing ----
+    [SerializeField] float mass;
 
 
 
@@ -121,11 +125,16 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, CollisionsLayers);
 
+        if (isGrounded && PlayerRigidBody.velocity.y >= -0.05f && PlayerRigidBody.velocity.y <= 0.05f)
+        {
+            NbJump = 1;
+        }
+
     }
     private void OnDrawGizmos()
     {
         // visuel de la position du cercle sous le joueur 
-        Gizmos.color = Color.blue;
+        Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
 
@@ -173,9 +182,10 @@ public class PlayerController : MonoBehaviour
 
     public void Jump(InputAction.CallbackContext context)
     {
-        if (isGrounded)
+        if (NbJump > 0 && isGrounded)
         {
             PlayerRigidBody.AddForce(new Vector2(0f, PlayerJump));
+            NbJump = NbJump - 1;
         }
 
     }
@@ -252,10 +262,21 @@ public class PlayerController : MonoBehaviour
     void CuringPower(InputAction.CallbackContext context)
     {
 
-
-        if (Input.GetKeyDown(KeyCode.Keypad3))
+        if (Curing == false)
         {
+            PlayerRigidBody.mass = mass = 10;
+            PlayerJump = 3000;
+            Speed = 3;
+
             Curing = true;
+        }
+        else if (Curing == true)
+        {
+            PlayerRigidBody.mass = mass = 1.08f;
+            PlayerJump = 700;
+            Speed = 5;
+
+            Curing = false;
         }
     }
 
