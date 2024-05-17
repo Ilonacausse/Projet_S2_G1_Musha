@@ -42,7 +42,7 @@ public class PlayerController : MonoBehaviour
 
     //-------- Player Jump ------------
     [SerializeField] Rigidbody2D PlayerRigidBody;
-    [SerializeField] float PlayerJump= 250f;
+    [SerializeField] float PlayerJump = 250f;
     [SerializeField] int NbJump = 1;
 
     [SerializeField] Transform groundCheck;
@@ -184,7 +184,7 @@ public class PlayerController : MonoBehaviour
     {
         if (NbJump > 0 && isGrounded)
         {
-            PlayerRigidBody.AddForce(new Vector2(0f, PlayerJump));
+            PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, PlayerJump);
             NbJump = NbJump - 1;
         }
 
@@ -217,7 +217,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(timer);
 
             Ammo_slime = 7;
-            //StartCoroutine(AmmoRefiled(Timer_slime));
 
         }
 
@@ -250,7 +249,6 @@ public class PlayerController : MonoBehaviour
             yield return new WaitForSeconds(timer);
 
             Ammo_net = 3;
-            //StartCoroutine(AmmoRefiled(Timer_net));
 
         }
     }
@@ -264,16 +262,16 @@ public class PlayerController : MonoBehaviour
 
         if (Curing == false)
         {
-            PlayerRigidBody.mass = mass = 10;
-            PlayerJump = 3000;
+            PlayerRigidBody.mass = 10;
+            PlayerJump = 9;
             Speed = 3;
 
             Curing = true;
         }
         else if (Curing == true)
         {
-            PlayerRigidBody.mass = mass = 1.08f;
-            PlayerJump = 700;
+            PlayerRigidBody.mass = 1.08f;
+            PlayerJump = 16.5f;
             Speed = 5;
 
             Curing = false;
