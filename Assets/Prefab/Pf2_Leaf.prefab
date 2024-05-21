@@ -13,7 +13,7 @@ GameObject:
   - component: {fileID: 5737799530282324490}
   - component: {fileID: 7460831162614901393}
   m_Layer: 0
-  m_Name: Pf 2
+  m_Name: Pf2_Leaf
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

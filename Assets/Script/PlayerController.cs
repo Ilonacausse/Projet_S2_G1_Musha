@@ -12,6 +12,7 @@ using UnityEngine.InputSystem;
 public class PlayerController : MonoBehaviour
 {
 
+
     //-------- New Input Controller ------------
     private Input_Control _inputControl;
 
@@ -33,11 +34,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float Speed = 5f;
 
     public Vector2 Input_Direction;
-
-
-    //-------- Player Animator and sprite renderer ------------
-    [SerializeField] Animator Player_Animator;
-    [SerializeField] SpriteRenderer spriteRenderer;
 
 
     //-------- Player Jump ------------
@@ -73,6 +69,26 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mass;
 
 
+    //-------- Player Animator and sprite renderer ------------
+    [SerializeField] Animator Player_Animator;
+    [SerializeField] SpriteRenderer spriteRenderer;
+
+
+    //-------- Health ------------
+
+    [SerializeField] int currentHealth;
+    [SerializeField] int maxHealth = 3;
+
+    public static PlayerController instance;
+
+
+
+
+
+    void Start()
+    {
+        currentHealth = maxHealth;
+    }
 
 
 
@@ -88,6 +104,9 @@ public class PlayerController : MonoBehaviour
         _playerInteract = _inputControl.Player.Interact;
 
         PlayerRigidBody = GetComponent<Rigidbody2D>();
+
+
+        instance = this;
     }
 
     private void OnEnable()

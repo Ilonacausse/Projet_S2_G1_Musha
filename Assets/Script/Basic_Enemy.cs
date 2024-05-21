@@ -3,25 +3,30 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Basic_Enemy : MonoBehaviour
-
 {
+
 
     [SerializeField] PlayerController controller;
 
 
     //---- Movement ----
-    public float speed;
+    [SerializeField] bool isMoving = true;
+    [SerializeField] float speed;
 
-    public Transform[] waypoints;
+    [SerializeField] Transform[] waypoints;
     private Transform target;
     private int desPoint = 0;
 
     //---- Player Detection ----
-    public bool isPlayer; 
+    [SerializeField] bool isPlayer; 
 
-    [SerializeField] object Weak_Hitbox_Position;
-    [SerializeField] Vector2 Weak_Hitbox_Sizes;
-    [SerializeField] float Player_ColisionLayer;
+    [SerializeField] Transform Weak_Hitbox_Position;
+    [SerializeField] Vector2 Weak_Hitbox_Size;
+    [SerializeField] LayerMask Player_ColisionLayer;
+
+
+
+
 
     void Start()
     {
@@ -29,37 +34,64 @@ public class Basic_Enemy : MonoBehaviour
     }
 
 
+
     void Update()
     {
-        // ************** Enemy Movement ************** \\
 
-        Vector3 dir = target.position - transform.position;
-        transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
-
-        if (Vector3.Distance(transform.position, target.position) < 0.03f)
-        {
-            desPoint = (desPoint + 1) % waypoints.Length;
-            target = waypoints[desPoint];
-        }
+        Move();
 
 
-        // ************** Player Detection ************** \\
+     //______________________________________ WEAK POINT ______________________________________
 
-        Collider2D[] Player_Detection = Physics2D.OverlapBoxAll(Weak_Hitbox_Position, Weak_Hitbox_Size, Player_ColisionLayer);
+        Collider2D[] Player_Detection = Physics2D.OverlapBoxAll(Weak_Hitbox_Position.position, Weak_Hitbox_Size, Player_ColisionLayer);
 
         isPlayer = false;
 
-        foreach (var gameObject in Player_Detection)
+        foreach (var Object in Player_Detection)
         {
 
-            if (gameObject.tag == "Player")
+            if (Object.tag == "Player" && !controller.Curing)
             {
-                isPlayer = true;
+                //Animation du Stun avec point pour appeler la fonction Stun() puis Unstun()
+            }
+
+            if (Object.tag == "Player" && controller.Curing)
+            {
+                //Animation du BigStun avec point pour appeler la fonction Stun() puis Unstun()
+            }
+        }
+    }
+
+    private void OnDrawGizmos()
+    {
+        // visuel de la position du cercle sous le joueur 
+        Gizmos.color = Color.red;
+        Gizmos.DrawWireCube(Weak_Hitbox_Position.position, Weak_Hitbox_Size);
+    }
+
+
+
+    //______________________________________ MOVEMENT ______________________________________
+
+    void Move ()
+    {
+        if (isMoving == true)
+        {
+
+            Vector3 dir = target.position - transform.position;
+            transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
+
+            if (Vector3.Distance(transform.position, target.position) < 0.03f)
+            {
+                desPoint = (desPoint + 1) % waypoints.Length;
+                target = waypoints[desPoint];
             }
         }
     }
 
 
+
+    //______________________________________ COLLISION ______________________________________
 
     private void OnCollisionEnter2D(Collision2D other)
     {
@@ -71,32 +103,23 @@ public class Basic_Enemy : MonoBehaviour
         
         if (other.gameObject.CompareTag("BulletNet"))
         {
-            //Animation EnemyTookNet Stop()
+            //Animation EnemyTookNet avec Stun() puis Unstun() pour Freeze la position
         }
 
     }
 
 
-    private void OnTriggerEnter2D(Collider2D other)
+
+    //fonction à appeler pendant les animations pour que l'ennemi ne bouge plus
+    public void Stun()
     {
-        if (other.CompareTag("Player") && !controller.Curing)
-        {
-            //Animation du Stun avec point pour appeler la fonction Stop()
-        }
-
-        if (other.CompareTag("Player") && controller.Curing)
-        {
-            //Animation du BigStun avec point pour appeler la fonction Stop()
-        }
+        isMoving = false;
     }
-
-
-
-    public void Stop()
+    public void Unstun()
     {
-        //fonction à appeler pendant les animations pour que l'ennemi ne bouge plus
+        isMoving = true;
     }
 
-    
+
 }
 

@@ -132,13 +132,17 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   controller: {fileID: 0}
+  isMoving: 1
   speed: 2.5
   waypoints:
   - {fileID: 3496944946712895980}
   - {fileID: 4308478634499647721}
   isPlayer: 0
-  Weak_Hitbox_Size: {x: 0, y: 0}
-  Player_ColisionLayer: 0
+  Weak_Hitbox_Position: {fileID: 3368350979319887614}
+  Weak_Hitbox_Size: {x: 0.8, y: 0.2}
+  Player_ColisionLayer:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!50 &2462337259908028808
 Rigidbody2D:
   serializedVersion: 4
@@ -165,7 +169,7 @@ Rigidbody2D:
   m_Interpolate: 0
   m_SleepingMode: 1
   m_CollisionDetection: 0
-  m_Constraints: 2
+  m_Constraints: 6
 --- !u!61 &800529454493109481
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -236,7 +240,7 @@ Transform:
   m_GameObject: {fileID: 6423916836953706910}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0.517, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -284,7 +288,7 @@ GameObject:
   - component: {fileID: 1562761621015235152}
   m_Layer: 0
   m_Name: To_Enemy
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
