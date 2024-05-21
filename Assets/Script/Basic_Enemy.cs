@@ -2,24 +2,25 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Red_enemy : MonoBehaviour
+public class Basic_Enemy : MonoBehaviour
+
 {
 
     [SerializeField] PlayerController controller;
 
 
     //---- Movement ----
-    [SerializeField] float speed;
+    public float speed;
 
-    [SerializeField] Transform[] waypoints;
+    public Transform[] waypoints;
     private Transform target;
     private int desPoint = 0;
 
     //---- Player Detection ----
-    public bool isPlayer;
+    public bool isPlayer; 
 
     [SerializeField] object Weak_Hitbox_Position;
-    [SerializeField] Vector2 Weak_Hitbox_Size;
+    [SerializeField] Vector2 Weak_Hitbox_Sizes;
     [SerializeField] float Player_ColisionLayer;
 
     void Start()
@@ -35,7 +36,7 @@ public class Red_enemy : MonoBehaviour
         Vector3 dir = target.position - transform.position;
         transform.Translate(dir.normalized * speed * Time.deltaTime, Space.World);
 
-        if (Vector3.Distance(transform.position, target.position) < 0.3f)
+        if (Vector3.Distance(transform.position, target.position) < 0.03f)
         {
             desPoint = (desPoint + 1) % waypoints.Length;
             target = waypoints[desPoint];
@@ -44,14 +45,14 @@ public class Red_enemy : MonoBehaviour
 
         // ************** Player Detection ************** \\
 
-        /*Collider2D[] Player_Detection = Physics2D.OverlapBoxAll(Weak_Hitbox_Position, Weak_Hitbox_Size, Player_ColisionLayer);
+        Collider2D[] Player_Detection = Physics2D.OverlapBoxAll(Weak_Hitbox_Position, Weak_Hitbox_Size, Player_ColisionLayer);
 
         isPlayer = false;
 
-        foreach (var Object in Player_Detection)
+        foreach (var gameObject in Player_Detection)
         {
 
-            if (Object.tag == "Player")
+            if (gameObject.tag == "Player")
             {
                 isPlayer = true;
             }
@@ -94,7 +95,8 @@ public class Red_enemy : MonoBehaviour
     public void Stop()
     {
         //fonction à appeler pendant les animations pour que l'ennemi ne bouge plus
-    }*/
-
     }
+
+    
 }
+
