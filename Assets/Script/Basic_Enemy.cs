@@ -18,8 +18,6 @@ public class Basic_Enemy : MonoBehaviour
     private int desPoint = 0;
 
     //---- Player Detection ----
-    [SerializeField] bool isPlayer; 
-
     [SerializeField] Transform Weak_Hitbox_Position;
     [SerializeField] Vector2 Weak_Hitbox_Size;
     [SerializeField] LayerMask Player_ColisionLayer;
@@ -44,8 +42,6 @@ public class Basic_Enemy : MonoBehaviour
      //______________________________________ WEAK POINT ______________________________________
 
         Collider2D[] Player_Detection = Physics2D.OverlapBoxAll(Weak_Hitbox_Position.position, Weak_Hitbox_Size, Player_ColisionLayer);
-
-        isPlayer = false;
 
         foreach (var Object in Player_Detection)
         {
@@ -96,7 +92,7 @@ public class Basic_Enemy : MonoBehaviour
     private void OnCollisionEnter2D(Collision2D other)
     {
 
-        if (other.gameObject.CompareTag("BulletSlim"))
+        if (other.gameObject.CompareTag("BulletSlime"))
         {
             //Animation EnemyTookSlime
         } 

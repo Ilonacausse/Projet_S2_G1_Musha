@@ -13,9 +13,9 @@ GameObject:
   - component: {fileID: 6073029896839871932}
   - component: {fileID: 790518890846171721}
   - component: {fileID: 4923895427691835302}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: BulletSlime
-  m_TagString: BulletSlim
+  m_TagString: BulletSlime
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

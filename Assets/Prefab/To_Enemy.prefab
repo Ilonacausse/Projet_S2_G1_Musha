@@ -137,7 +137,6 @@ MonoBehaviour:
   waypoints:
   - {fileID: 3496944946712895980}
   - {fileID: 4308478634499647721}
-  isPlayer: 0
   Weak_Hitbox_Position: {fileID: 3368350979319887614}
   Weak_Hitbox_Size: {x: 0.8, y: 0.2}
   Player_ColisionLayer:

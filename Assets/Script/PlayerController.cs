@@ -46,6 +46,8 @@ public class PlayerController : MonoBehaviour
     [SerializeField] bool isGrounded;
     [SerializeField] LayerMask CollisionsLayers;
 
+    public bool isFalling = false;
+
 
     //-------- Powers ------------
     public Transform BulletSpawner;
@@ -69,7 +71,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mass;
 
 
-    //-------- Player Animator and sprite renderer ------------
+    //-------- Animator and sprite renderer ------------
     [SerializeField] Animator Player_Animator;
     [SerializeField] SpriteRenderer spriteRenderer;
 
@@ -139,6 +141,7 @@ public class PlayerController : MonoBehaviour
     private void FixedUpdate()
     {
         PlayerMouvement();
+        Falling();
 
         // ************** Ground Detection ************** \\
 
@@ -150,6 +153,7 @@ public class PlayerController : MonoBehaviour
         }
 
     }
+
     private void OnDrawGizmos()
     {
         // visuel de la position du cercle sous le joueur 
@@ -206,7 +210,20 @@ public class PlayerController : MonoBehaviour
             PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, PlayerJump);
             NbJump = NbJump - 1;
         }
+    }
 
+    public void Falling()
+    {
+        // ************** Breackable Platform ************** \\
+
+        if (PlayerRigidBody.velocity.y >= 0f)
+        {
+            isFalling = false;
+        }
+        if (PlayerRigidBody.velocity.y <= -0.6f)
+        {
+            isFalling = true;
+        }
     }
 
 
@@ -286,6 +303,7 @@ public class PlayerController : MonoBehaviour
             Speed = 3;
 
             Curing = true;
+
         }
         else if (Curing == true)
         {
@@ -295,6 +313,7 @@ public class PlayerController : MonoBehaviour
 
             Curing = false;
         }
+
     }
 
 }
