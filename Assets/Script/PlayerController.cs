@@ -36,6 +36,7 @@ public class PlayerController : MonoBehaviour
     public Vector2 Input_Direction;
 
 
+
     //-------- Player Jump ------------
     [SerializeField] Rigidbody2D PlayerRigidBody;
     [SerializeField] float PlayerJump = 250f;
@@ -43,10 +44,15 @@ public class PlayerController : MonoBehaviour
 
     [SerializeField] Transform groundCheck;
     [SerializeField] float groundCheckRadius; 
-    [SerializeField] bool isGrounded;
+    public bool isGrounded;
     [SerializeField] LayerMask CollisionsLayers;
 
     public bool isFalling = false;
+
+    //-------- Interaction ------------
+
+    [SerializeField] Dialogue_Trigger dialogueTgr;
+
 
 
     //-------- Powers ------------
@@ -71,9 +77,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] float mass;
 
 
+
     //-------- Animator and sprite renderer ------------
     [SerializeField] Animator Player_Animator;
     [SerializeField] SpriteRenderer spriteRenderer;
+
 
 
     //-------- Health ------------
@@ -103,7 +111,6 @@ public class PlayerController : MonoBehaviour
         _playerPower2 = _inputControl.Player.Power2;
         _playerPower3 = _inputControl.Player.Power3;
         _playerJump = _inputControl.Player.Jump;
-        _playerInteract = _inputControl.Player.Interact;
 
         PlayerRigidBody = GetComponent<Rigidbody2D>();
 
@@ -118,7 +125,6 @@ public class PlayerController : MonoBehaviour
         _playerPower2.Enable();
         _playerPower3.Enable();
         _playerJump.Enable();
-        _playerInteract.Enable();
 
         _playerJump.started += Jump;
         _playerPower1.started += SlimePower;
@@ -133,7 +139,6 @@ public class PlayerController : MonoBehaviour
         _playerPower2.Disable();
         _playerPower3.Disable();
         _playerJump?.Disable();
-        _playerInteract.Disable();
     }
 
 
@@ -142,6 +147,7 @@ public class PlayerController : MonoBehaviour
     {
         PlayerMouvement();
         Falling();
+
 
         // ************** Ground Detection ************** \\
 
@@ -160,6 +166,7 @@ public class PlayerController : MonoBehaviour
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(groundCheck.position, groundCheckRadius);
     }
+
 
 
     //______________________________________ MOVEMENT ______________________________________
@@ -201,7 +208,7 @@ public class PlayerController : MonoBehaviour
 
 
 
-    //______________________________________ JUMP ______________________________________
+    //______________________________________ JUMP - INTERACTION ______________________________________
 
     public void Jump(InputAction.CallbackContext context)
     {
@@ -211,6 +218,7 @@ public class PlayerController : MonoBehaviour
             NbJump = NbJump - 1;
         }
     }
+
 
     public void Falling()
     {

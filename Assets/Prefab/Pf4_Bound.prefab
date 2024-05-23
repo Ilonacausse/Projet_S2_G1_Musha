@@ -173,8 +173,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rb: {fileID: 8319424494153011367}
-  mTargetObject: {fileID: 0}
-  timing: 0.3
+  _link: {fileID: 7115084649972431397}
   Break_Hitbox_Position: {fileID: 8349086845320081850}
   Break_Hitbox_Size: {x: 0.23, y: 2.65}
   Slime_ColisionLayer:

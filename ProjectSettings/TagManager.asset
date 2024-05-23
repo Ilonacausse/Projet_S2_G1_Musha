@@ -8,6 +8,7 @@ TagManager:
   - BulletNet
   - BulletSlime
   - Link
+  - PNJ
   layers:
   - Default
   - TransparentFX
