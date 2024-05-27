@@ -7,9 +7,12 @@ public class HealthSystem : MonoBehaviour
 {
 
 
-    [SerializeField] Sprite fullPoint;
-    [SerializeField] Sprite emptyPoint;
-    [SerializeField] Image life1, life2, life3;
+    public static int health = 3;
+
+    public Image[] hearts;
+
+    public Sprite fullHeart;
+    public Sprite emptyHeart;
 
 
 
@@ -17,6 +20,13 @@ public class HealthSystem : MonoBehaviour
     
     void Update()
     {
-
+        foreach (Image img in hearts)
+        {
+            img.sprite = emptyHeart;
+        }
+        for (int i = 0; i < health; i++)
+        {
+            hearts[i].sprite = fullHeart;
+        }
     }
 }

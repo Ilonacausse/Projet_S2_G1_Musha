@@ -29,7 +29,7 @@ public class PlayerController : MonoBehaviour
     public bool CanMove = true;
 
     //-------- Movement standard ------------
-    [SerializeField] PlayerController playerController;
+    [SerializeField] PlayerController _playerController;
 
     [SerializeField] float Speed = 5f;
 
@@ -38,7 +38,7 @@ public class PlayerController : MonoBehaviour
 
 
     //-------- Player Jump ------------
-    [SerializeField] Rigidbody2D PlayerRigidBody;
+    [SerializeField] Rigidbody2D _playerRB;
     [SerializeField] float PlayerJump = 250f;
     [SerializeField] int NbJump = 1;
 
@@ -51,7 +51,7 @@ public class PlayerController : MonoBehaviour
 
     //-------- Interaction ------------
 
-    [SerializeField] Dialogue_Trigger dialogueTgr;
+
 
 
 
@@ -86,19 +86,7 @@ public class PlayerController : MonoBehaviour
 
     //-------- Health ------------
 
-    [SerializeField] int currentHealth;
-    [SerializeField] int maxHealth = 3;
 
-    public static PlayerController instance;
-
-
-
-
-
-    void Start()
-    {
-        currentHealth = maxHealth;
-    }
 
 
 
@@ -112,10 +100,7 @@ public class PlayerController : MonoBehaviour
         _playerPower3 = _inputControl.Player.Power3;
         _playerJump = _inputControl.Player.Jump;
 
-        PlayerRigidBody = GetComponent<Rigidbody2D>();
-
-
-        instance = this;
+        _playerRB = GetComponent<Rigidbody2D>();
     }
 
     private void OnEnable()
@@ -153,7 +138,7 @@ public class PlayerController : MonoBehaviour
 
         isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, CollisionsLayers);
 
-        if (isGrounded && PlayerRigidBody.velocity.y >= -0.05f && PlayerRigidBody.velocity.y <= 0.05f)
+        if (isGrounded && _playerRB.velocity.y >= -0.05f && _playerRB.velocity.y <= 0.05f)
         {
             NbJump = 1;
         }
@@ -176,20 +161,20 @@ public class PlayerController : MonoBehaviour
         if (CanMove)
         {
             Input_Direction = _playerMove.ReadValue<Vector2>();
-            Vector2 Player_Velocity = PlayerRigidBody.velocity;
+            Vector2 Player_Velocity = _playerRB.velocity;
 
             Player_Velocity.x = (Speed * Input_Direction.x);
-            PlayerRigidBody.velocity = Player_Velocity;
+            _playerRB.velocity = Player_Velocity;
 
 
-            if (PlayerRigidBody.velocity.x > 0.01)
+            if (_playerRB.velocity.x > 0.01)
             {
 
                // GetComponent<SpriteRenderer>().flipX = true;
                 this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 0f, 0f);        //Flip the Gun when the player changes his axe
 
             }
-            else if (PlayerRigidBody.velocity.x < -0.01)
+            else if (_playerRB.velocity.x < -0.01)
             {
 
                // GetComponent<SpriteRenderer>().flipX = false;
@@ -214,7 +199,7 @@ public class PlayerController : MonoBehaviour
     {
         if (NbJump > 0 && isGrounded)
         {
-            PlayerRigidBody.velocity = new Vector2(PlayerRigidBody.velocity.x, PlayerJump);
+            _playerRB.velocity = new Vector2(_playerRB.velocity.x, PlayerJump);
             NbJump = NbJump - 1;
         }
     }
@@ -224,11 +209,11 @@ public class PlayerController : MonoBehaviour
     {
         // ************** Breackable Platform ************** \\
 
-        if (PlayerRigidBody.velocity.y >= 0f)
+        if (_playerRB.velocity.y >= 0f)
         {
             isFalling = false;
         }
-        if (PlayerRigidBody.velocity.y <= -0.6f)
+        if (_playerRB.velocity.y <= -0.6f)
         {
             isFalling = true;
         }
@@ -241,7 +226,7 @@ public class PlayerController : MonoBehaviour
     private void SlimePower(InputAction.CallbackContext context)
     {
 
-        if (Ammo_slime >= 0 && playerController.Curing == false)
+        if (Ammo_slime >= 0 && _playerController.Curing == false)
         {
             var bullet = Instantiate(bulletPrefab_slime, BulletSpawner.position, BulletSpawner.rotation);
             bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_slime;
@@ -273,7 +258,7 @@ public class PlayerController : MonoBehaviour
     private void NetPower(InputAction.CallbackContext context) 
     { 
 
-        if (Ammo_net >= 0 && playerController.Curing == false)
+        if (Ammo_net >= 0 && _playerController.Curing == false)
         {
             var bullet = Instantiate(bulletPrefab_net, BulletSpawner.position, BulletSpawner.rotation);
             bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_net;
@@ -306,7 +291,7 @@ public class PlayerController : MonoBehaviour
 
         if (Curing == false)
         {
-            PlayerRigidBody.mass = 10;
+            _playerRB.mass = 10;
             PlayerJump = 9;
             Speed = 3;
 
@@ -315,7 +300,7 @@ public class PlayerController : MonoBehaviour
         }
         else if (Curing == true)
         {
-            PlayerRigidBody.mass = 1.08f;
+            _playerRB.mass = 1.08f;
             PlayerJump = 16.5f;
             Speed = 5;
 
@@ -324,5 +309,21 @@ public class PlayerController : MonoBehaviour
 
     }
 
+
+
+    //______________________________________ HEALTH - GAMEOVER ______________________________________
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.transform.tag == "Enemy")
+        {
+            //HealthSystem.health--;
+            //if(HealthSystem.health <= 0)
+            //{
+            PlayerManager.isGameOver = true;
+            gameObject.SetActive(false);
+            //}
+        }
+    }
 }
 
