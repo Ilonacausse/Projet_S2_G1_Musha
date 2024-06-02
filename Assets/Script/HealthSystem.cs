@@ -18,6 +18,11 @@ public class HealthSystem : MonoBehaviour
 
 
     
+    void Awake () 
+    {
+        health = 3;
+    }
+
     void Update()
     {
         foreach (Image img in hearts)

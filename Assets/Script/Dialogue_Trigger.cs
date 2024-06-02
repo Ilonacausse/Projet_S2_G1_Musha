@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 
@@ -13,29 +14,55 @@ public class Dialogue_Trigger : MonoBehaviour
 
     public Dialogue dialogue;
 
-    [SerializeField] PlayerController controller;
-
     public bool isInRange;
 
+    //-------- New Input Controller ------------
+    [SerializeField] PlayerController controller;
+    private Input_Control _inputControl;
+    private InputAction _playerInteract;
+
+
+
+
+    /*
+    private void Awake()
+    {
+        _inputControl = new Input_Control();
+
+        _playerInteract = _inputControl.Player.Interact;
+    }
+
+    private void OnEnable()
+    {
+        _playerInteract.Enable();
+
+        _playerInteract.started += Interact;
+    }
+
+    private void OnDisable()
+    {
+        _playerInteract.Disable();
+    }
 
 
 
 
     //______________________________________ PLAYER DETECTION ______________________________________
 
+
     void Update ()
     {
-        if(isInRange) 
-        {
-            TriggerDialogue();
-        }
+
+        Interact();
+
     }
 
 
-    public void OnTriggerEnter2D(Collider2D collision)
+    private void OnTriggerEnter2D(Collider2D collision)
     {
         if(collision.CompareTag("Player"))
         {
+            controller.isGrounded = false;
             isInRange = true;
         }
     }
@@ -50,10 +77,15 @@ public class Dialogue_Trigger : MonoBehaviour
 
 
 
+
     //______________________________________ START DIALOGUE ______________________________________
 
-    void TriggerDialogue ()
+    void Interact(InputAction.CallbackContext context)
     {
-
-    }
+        if (isInRange)
+        {
+            Debug.Log("Interraction");
+            //        TriggerDialogue();
+        }
+    }*/
 }

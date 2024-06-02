@@ -8,7 +8,10 @@ TagManager:
   - BulletNet
   - BulletSlime
   - Link
-  - PNJ
+  - Checkpoint
+  - NPCcoprine
+  - NPCgano
+  - NPCci
   layers:
   - Default
   - TransparentFX

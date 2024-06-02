@@ -17,11 +17,19 @@ public class Basic_Enemy : MonoBehaviour
     private Transform target;
     private int desPoint = 0;
 
+
     //---- Player Detection ----
     [SerializeField] Transform Weak_Hitbox_Position;
     [SerializeField] Vector2 Weak_Hitbox_Size;
     [SerializeField] LayerMask Player_ColisionLayer;
 
+    [SerializeField] GameObject _enemy;
+
+
+
+    //-------- Animator and sprite renderer ------------
+    [SerializeField] Animator anim;
+    [SerializeField] SpriteRenderer spriteRenderer;
 
 
 
@@ -48,11 +56,13 @@ public class Basic_Enemy : MonoBehaviour
 
             if (Object.tag == "Player" && !controller.Curing)
             {
+                Debug.Log("STUNE");
                 //Animation du Stun avec point pour appeler la fonction Stun() puis Unstun()
             }
 
             if (Object.tag == "Player" && controller.Curing)
             {
+                Debug.Log("STUNE CURING");
                 //Animation du BigStun avec point pour appeler la fonction Stun() puis Unstun()
             }
         }
@@ -81,6 +91,7 @@ public class Basic_Enemy : MonoBehaviour
             {
                 desPoint = (desPoint + 1) % waypoints.Length;
                 target = waypoints[desPoint];
+                spriteRenderer.flipX = !spriteRenderer.flipX;
             }
         }
     }
@@ -94,11 +105,13 @@ public class Basic_Enemy : MonoBehaviour
 
         if (other.gameObject.CompareTag("BulletSlime"))
         {
+            Debug.Log("Slow");
             //Animation EnemyTookSlime
         } 
         
         if (other.gameObject.CompareTag("BulletNet"))
         {
+            Debug.Log("NEEEEET");
             //Animation EnemyTookNet avec Stun() puis Unstun() pour Freeze la position
         }
 
@@ -110,10 +123,12 @@ public class Basic_Enemy : MonoBehaviour
     public void Stun()
     {
         isMoving = false;
+        _enemy.GetComponent<BoxCollider2D>().enabled = false;
     }
     public void Unstun()
     {
         isMoving = true;
+        _enemy.GetComponent<BoxCollider2D>().enabled = true;
     }
 
 

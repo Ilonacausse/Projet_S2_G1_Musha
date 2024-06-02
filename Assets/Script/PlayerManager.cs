@@ -1,5 +1,6 @@
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PlayerManager : MonoBehaviour
 {
@@ -10,6 +11,9 @@ public class PlayerManager : MonoBehaviour
     public GameObject _gameoverScreen;
 
     public static Vector2 _lastCheckPoint = new Vector2(-25.29f,-3);
+
+
+    [SerializeField] private GameObject _replayMenuFirts;
 
 
 
@@ -36,6 +40,8 @@ public class PlayerManager : MonoBehaviour
 
     public void Replay ()
     {
+        EventSystem.current.SetSelectedGameObject(_replayMenuFirts);
+
         SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
 }

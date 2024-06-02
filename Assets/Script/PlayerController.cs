@@ -4,6 +4,7 @@ using Unity.VisualScripting;
 using Unity.VisualScripting.Antlr3.Runtime.Misc;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using System.Collections;
 
 
 
@@ -21,7 +22,6 @@ public class PlayerController : MonoBehaviour
     private InputAction _playerPower2;
     private InputAction _playerPower3;
     private InputAction _playerJump;
-    private InputAction _playerInteract;
     
 
 
@@ -49,44 +49,51 @@ public class PlayerController : MonoBehaviour
 
     public bool isFalling = false;
 
-    //-------- Interaction ------------
-
-
-
 
 
     //-------- Powers ------------
     public Transform BulletSpawner;
     private Transform Gun_Transform;
 
+
+    //---- Curing ----
     public bool Curing = false;
+    [SerializeField] float mass;
+    public bool curingpower = false;
 
     //---- Slime ----
     [SerializeField] GameObject bulletPrefab_slime;
     [SerializeField] float bulletSpeed_slime = 10;
     [SerializeField] float Ammo_slime = 6;
     [SerializeField] float Timer_slime = 10f;
+    public bool slimepower = false;
+
 
     //---- Net ----
     [SerializeField] GameObject bulletPrefab_net;
     [SerializeField] float bulletSpeed_net = 10;
     [SerializeField] float Ammo_net = 3;
     [SerializeField] float Timer_net = 15f;
-
-    //---- Curing ----
-    [SerializeField] float mass;
+    public bool netpower = false;
 
 
 
     //-------- Animator and sprite renderer ------------
-    [SerializeField] Animator Player_Animator;
+    [SerializeField] Animator anim;
     [SerializeField] SpriteRenderer spriteRenderer;
+    public bool AxeX;
+    public bool isMoving;
 
 
 
-    //-------- Health ------------
 
 
+    void Start ()
+    {
+        curingpower = false;
+        slimepower = false;
+        netpower = false;
+    }
 
 
 
@@ -172,6 +179,8 @@ public class PlayerController : MonoBehaviour
 
                // GetComponent<SpriteRenderer>().flipX = true;
                 this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 0f, 0f);        //Flip the Gun when the player changes his axe
+                AxeX = true;        //Si l'axe est positif
+                isMoving = true;    //Si la velocity n'est pas nulle, qu'il bouge
 
             }
             else if (_playerRB.velocity.x < -0.01)
@@ -179,9 +188,15 @@ public class PlayerController : MonoBehaviour
 
                // GetComponent<SpriteRenderer>().flipX = false;
                 this.transform.Find("Gun").rotation = Quaternion.Euler(0f, 180f, 0f);        //Flip the Gun when the Player changes his axe
-
+                AxeX = false;
+                isMoving = true;
+            }
+            else
+            {
+                isMoving = false;
             }
 
+            Animation();
         }
 
     }
@@ -202,6 +217,8 @@ public class PlayerController : MonoBehaviour
             _playerRB.velocity = new Vector2(_playerRB.velocity.x, PlayerJump);
             NbJump = NbJump - 1;
         }
+
+        Animation();
     }
 
 
@@ -220,33 +237,127 @@ public class PlayerController : MonoBehaviour
     }
 
 
+    private void Animation()
+    {
+        // ************** Animation Idle ************** \\
+
+        if (isGrounded && AxeX && !isMoving)
+        {
+            anim.SetBool("IdleD", true);
+            anim.SetBool("IdleG", false);
+        }
+        else if (isGrounded && !AxeX && !isMoving)
+        {
+            anim.SetBool("IdleD", false);
+            anim.SetBool("IdleG", true);
+        }
+        else
+        {
+            anim.SetBool("IdleD", false);
+            anim.SetBool("IdleG", false);
+        }
+
+
+        // ************** Animation Run ************** \\
+
+        if (isGrounded && AxeX && isMoving)
+        {
+            anim.SetBool("isRunningD", true);
+            anim.SetBool("isRunningG", false);
+        }
+        else if (isGrounded && !AxeX && isMoving)
+        {
+            anim.SetBool("isRunningD", false);
+            anim.SetBool("isRunningG", true);
+        }
+        else
+        {
+            anim.SetBool("isRunningD", false);
+            anim.SetBool("isRunningG", false);
+        }
+
+
+
+        // ************** Animation Jump ************** \\
+
+        if (!isGrounded && AxeX)
+        {
+            anim.SetBool("isJumpingD", true);
+            anim.SetBool("isJumpingG", false);
+        }
+        else if (!isGrounded && !AxeX)
+        {
+            anim.SetBool("isJumpingD", false);
+            anim.SetBool("isJumpingG", true);
+        }
+        else
+        {
+            anim.SetBool("isJumpingD", false);
+            anim.SetBool("isJumpingG", false);
+        }
+    }
+
+
+    //______________________________________ CURING ______________________________________
+
+    void CuringPower(InputAction.CallbackContext context)
+    {
+        if (curingpower == true)
+        {
+            if (Curing == false)
+            {
+                _playerRB.mass = 10;
+                PlayerJump = 9;
+                Speed = 3;
+
+                Curing = true;
+
+            }
+            else if (Curing == true)
+            {
+                _playerRB.mass = 1.08f;
+                PlayerJump = 16.5f;
+                Speed = 7;
+
+                Curing = false;
+            }
+        }
+
+
+    }
+
+
 
     //______________________________________ SLIME ______________________________________
 
     private void SlimePower(InputAction.CallbackContext context)
     {
 
-        if (Ammo_slime >= 0 && _playerController.Curing == false)
+        if (slimepower == true)
         {
-            var bullet = Instantiate(bulletPrefab_slime, BulletSpawner.position, BulletSpawner.rotation);
-            bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_slime;
-            Ammo_slime -= 1;
-            Debug.Log(Ammo_slime);
-        }
 
-        if (Ammo_slime == 0)
-        {
-            StartCoroutine(AmmoRefiled(Timer_slime));
+            if (Ammo_slime >= 0 && _playerController.Curing == false && isGrounded)
+            {
+                var bullet = Instantiate(bulletPrefab_slime, BulletSpawner.position, BulletSpawner.rotation);
+                bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_slime;
+                Ammo_slime -= 1;
+                Debug.Log(Ammo_slime);
+            }
 
-        }
+            if (Ammo_slime == 0)
+            {
+                StartCoroutine(AmmoRefiled(Timer_slime));
 
-        IEnumerator AmmoRefiled(float timer)
-        {
-            //instantiation des projectiles grace aux prefabs avec une coroutine pour creer un timing entre chaque projectile 
-            yield return new WaitForSeconds(timer);
+            }
 
-            Ammo_slime = 7;
+            IEnumerator AmmoRefiled(float timer)
+            {
+                //instantiation des projectiles grace aux prefabs avec une coroutine pour creer un timing entre chaque projectile 
+                yield return new WaitForSeconds(timer);
 
+                Ammo_slime = 7;
+
+            }
         }
 
     }
@@ -256,58 +367,36 @@ public class PlayerController : MonoBehaviour
     //______________________________________ NET ______________________________________
 
     private void NetPower(InputAction.CallbackContext context) 
-    { 
-
-        if (Ammo_net >= 0 && _playerController.Curing == false)
-        {
-            var bullet = Instantiate(bulletPrefab_net, BulletSpawner.position, BulletSpawner.rotation);
-            bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_net;
-            Ammo_net -= 1;
-            Debug.Log(Ammo_net);
-        }
-
-        if (Ammo_net == 0)
-        {
-            StartCoroutine(AmmoRefiled_net(Timer_net));
-
-        }
-
-        IEnumerator AmmoRefiled_net(float timer)
-        {
-            //instantiation des projectiles grace aux prefabs avec une coroutine pour creer un timing entre chaque projectile 
-            yield return new WaitForSeconds(timer);
-
-            Ammo_net = 3;
-
-        }
-    }
-
-
-
-    //______________________________________ CURING ______________________________________
-
-    void CuringPower(InputAction.CallbackContext context)
     {
 
-        if (Curing == false)
+        if (netpower == true)
         {
-            _playerRB.mass = 10;
-            PlayerJump = 9;
-            Speed = 3;
 
-            Curing = true;
+            if (Ammo_net >= 0 && _playerController.Curing == false && isGrounded)
+            {
+                var bullet = Instantiate(bulletPrefab_net, BulletSpawner.position, BulletSpawner.rotation);
+                bullet.GetComponent<Rigidbody2D>().velocity = BulletSpawner.forward * bulletSpeed_net;
+                Ammo_net -= 1;
+                Debug.Log(Ammo_net);
+            }
 
+            if (Ammo_net == 0)
+            {
+                StartCoroutine(AmmoRefiled_net(Timer_net));
+
+            }
+
+            IEnumerator AmmoRefiled_net(float timer)
+            {
+                //instantiation des projectiles grace aux prefabs avec une coroutine pour creer un timing entre chaque projectile 
+                yield return new WaitForSeconds(timer);
+
+                Ammo_net = 3;
+
+            }
         }
-        else if (Curing == true)
-        {
-            _playerRB.mass = 1.08f;
-            PlayerJump = 16.5f;
-            Speed = 5;
-
-            Curing = false;
-        }
-
     }
+
 
 
 
@@ -317,12 +406,59 @@ public class PlayerController : MonoBehaviour
     {
         if (collision.transform.tag == "Enemy")
         {
-            //HealthSystem.health--;
-            //if(HealthSystem.health <= 0)
-            //{
-            PlayerManager.isGameOver = true;
-            gameObject.SetActive(false);
-            //}
+            HealthSystem.health--;
+            if(HealthSystem.health <= 0)
+            {
+                PlayerManager.isGameOver = true;
+                gameObject.SetActive(false);
+            }
+            else
+            {
+                StartCoroutine(GetHurt());
+            }
+        }
+    }
+    IEnumerator GetHurt()
+    {
+        Physics2D.IgnoreLayerCollision(3,7);
+        yield return new WaitForSeconds(1.5f);     //un temps d'invulnerabilite
+        Physics2D.IgnoreLayerCollision(3, 7, false);
+    }
+
+
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.transform.tag == "Checkpoint")
+        {
+            Debug.Log("Check");
+            PlayerManager._lastCheckPoint = transform.position;
+            collision.GetComponent<Collider2D>().enabled = false;     //Pour ne plus intéragir apres
+            collision.GetComponent<Animator>().SetTrigger("isAppear");   //Trigger Checkpoint animation
+        }
+
+
+        //-------- Curing ------------
+
+        if (collision.CompareTag("NPCgano"))
+        {
+            curingpower = true;
+        }
+
+
+        //-------- Slime ------------
+
+        if (collision.CompareTag("NPCcoprine"))
+        {
+            slimepower = true;
+        }
+
+
+        //-------- Curing ------------
+
+        if (collision.CompareTag("NPCci"))
+        {
+            netpower = true;
         }
     }
 }
