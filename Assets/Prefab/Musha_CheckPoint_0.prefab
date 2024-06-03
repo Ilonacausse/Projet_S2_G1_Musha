@@ -134,6 +134,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8849f0536dadd1b45b33dab9def74cd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  collider: {fileID: 3969734732359076365}
 --- !u!95 &-8034381518633949533
 Animator:
   serializedVersion: 5

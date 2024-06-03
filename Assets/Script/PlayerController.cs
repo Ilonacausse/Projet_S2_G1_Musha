@@ -22,11 +22,12 @@ public class PlayerController : MonoBehaviour
     private InputAction _playerPower2;
     private InputAction _playerPower3;
     private InputAction _playerJump;
-    
+
 
 
     //-------- Player can move or not ------------
-    public bool CanMove = true;
+    [SerializeField] TLMN_tigger TLMNtrig;
+    [SerializeField] public bool CanMove = true;
 
     //-------- Movement standard ------------
     [SerializeField] PlayerController _playerController;
@@ -38,7 +39,7 @@ public class PlayerController : MonoBehaviour
 
 
     //-------- Player Jump ------------
-    [SerializeField] Rigidbody2D _playerRB;
+    [SerializeField] public Rigidbody2D _playerRB;
     [SerializeField] float PlayerJump = 250f;
     [SerializeField] int NbJump = 1;
 
@@ -137,7 +138,13 @@ public class PlayerController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        PlayerMouvement();
+        if (CanMove == true)
+        {
+            PlayerMouvement();
+
+        }
+
+
         Falling();
 
 
@@ -165,8 +172,7 @@ public class PlayerController : MonoBehaviour
 
     public void PlayerMouvement()
     {
-        if (CanMove)
-        {
+        
             Input_Direction = _playerMove.ReadValue<Vector2>();
             Vector2 Player_Velocity = _playerRB.velocity;
 
@@ -195,16 +201,11 @@ public class PlayerController : MonoBehaviour
             {
                 isMoving = false;
             }
-
-            Animation();
-        }
-
+        Animation();
     }
 
-    void PlayerCanMove()
-    {
-       CanMove = true;
-    }
+    
+
 
 
 
@@ -236,6 +237,9 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+
+
+    //______________________________________ ANIAMTION ______________________________________
 
     private void Animation()
     {

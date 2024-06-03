@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.LowLevel;
 
 public class MenuManager : MonoBehaviour
 {
@@ -30,7 +31,7 @@ public class MenuManager : MonoBehaviour
 
     private void Update()
     {
-        if (InputManager.instance.MenuOpenCloseInput)
+        if (Input.GetButtonDown("Pause"));
         {
             if (!isPaused)
             {
