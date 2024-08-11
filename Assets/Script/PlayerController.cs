@@ -168,6 +168,7 @@ public class PlayerController : MonoBehaviour
 
 
 
+
     //______________________________________ MOVEMENT ______________________________________
 
     public void PlayerMouvement()
@@ -204,8 +205,6 @@ public class PlayerController : MonoBehaviour
         Animation();
     }
 
-    
-
 
 
 
@@ -236,6 +235,7 @@ public class PlayerController : MonoBehaviour
             isFalling = true;
         }
     }
+
 
 
 
@@ -302,6 +302,8 @@ public class PlayerController : MonoBehaviour
     }
 
 
+
+
     //______________________________________ CURING ______________________________________
 
     void CuringPower(InputAction.CallbackContext context)
@@ -329,6 +331,7 @@ public class PlayerController : MonoBehaviour
 
 
     }
+
 
 
 
@@ -368,6 +371,7 @@ public class PlayerController : MonoBehaviour
 
 
 
+
     //______________________________________ NET ______________________________________
 
     private void NetPower(InputAction.CallbackContext context) 
@@ -404,9 +408,16 @@ public class PlayerController : MonoBehaviour
 
 
 
-    //______________________________________ HEALTH - GAMEOVER ______________________________________
+  //______________________________________ DIALOGUE INTERACTION ______________________________________
 
-    private void OnCollisionEnter2D(Collision2D collision)
+
+
+
+
+
+//______________________________________ HEALTH - GAMEOVER ______________________________________
+
+private void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.transform.tag == "Enemy")
         {
@@ -465,5 +476,7 @@ public class PlayerController : MonoBehaviour
             netpower = true;
         }
     }
+
+
 }
 
